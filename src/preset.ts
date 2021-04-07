@@ -1,5 +1,6 @@
 import BINARYUUID from './define/binary-uuid';
 import VIRTUALBINARYUUID from './define/virtual-uuid';
+import {ModelAttributes, Model, ModelAttributeColumnOptions} from "sequelize";
 
 /*
   A simple preset for default key with virtual field
@@ -10,7 +11,13 @@ const DEFAULT_FIELD_OPS = Object.freeze({
   allowNull: false
 });
 
-export default function withBinaryUUID(definition, ops = {}) {
+export interface IPresetOptions {
+  primaryID?: string;
+  virtualID?: string;
+  field?: ModelAttributeColumnOptions
+}
+
+export default function withBinaryUUID<M extends Model>(definition: ModelAttributes<M, M['_attributes']>, ops: IPresetOptions = {}) {
   const primaryID = ops.primaryID || 'id';
   const virtualID = ops.virtualID || 'uuid';
   const field = !definition && !ops.field ? DEFAULT_FIELD_OPS : ops.field;

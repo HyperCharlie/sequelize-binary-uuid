@@ -1,7 +1,7 @@
-import Sequelize from 'sequelize';
+import Sequelize, { ModelAttributeColumnOptions } from 'sequelize';
 import { fromBinaryUUID } from 'binary-uuid';
 
-function attachStringUUID(instance, binaryID, stringID) {
+function attachStringUUID(instance: Sequelize.Model<any, any>, binaryID: string, stringID: string) {
   const buf = instance.getDataValue(binaryID);
   if (!buf) return null;
   const uuid = fromBinaryUUID(buf);
@@ -9,7 +9,7 @@ function attachStringUUID(instance, binaryID, stringID) {
   return uuid;
 }
 
-export default function VIRTUALBINARYUUID(binaryID = 'id', stringID = 'uuid') {
+export default function VIRTUALBINARYUUID(binaryID: string = 'id', stringID: string = 'uuid'): ModelAttributeColumnOptions {
   return {
     type: new Sequelize.DataTypes.VIRTUAL(Sequelize.DataTypes.STRING, [binaryID]),
     get() {

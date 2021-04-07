@@ -1,5 +1,5 @@
 import createBinaryUUID from 'binary-uuid';
 
-export function getBinaryUUID() {
+export function getBinaryUUID(): Buffer {
   return createBinaryUUID().buffer;
 }

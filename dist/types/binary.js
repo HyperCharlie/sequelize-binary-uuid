@@ -1,4 +1,11 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _util=_interopRequireDefault(require("util")),_sequelize=_interopRequireDefault(require("sequelize")),_errors=_interopRequireDefault(require("sequelize/lib/errors")),_inherits=_interopRequireDefault(require("../utils/inherits"));function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}/**
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = __importDefault(require("util"));
+const sequelize_1 = __importDefault(require("sequelize"));
+/**
  * BINARY A variable binary string
  *
  * @param {number} [length=255] length of string
@@ -6,4 +13,41 @@
  *
  * @namespace DataTypes.STRING
  *
- */function BINARY(a){const b="object"==typeof a&&a||{length:a};return this instanceof BINARY?void(this.options=b,this._length=b.length||255):new BINARY(b)}(0,_inherits.default)(BINARY,_sequelize.default.DataTypes.ABSTRACT),BINARY.prototype.key=BINARY.key="BINARY",BINARY.prototype.toSql=function(){return`BINARY(${this._length})`},BINARY.prototype.validate=function(a){if(!Buffer.isBuffer(a)&&"number"!=typeof a)throw new _errors.default.ValidationError(_util.default.format("%j is not a valid binary buffer",a));return!0},BINARY.prototype.escape=!1,BINARY.prototype._stringify=function(a){Buffer.isBuffer(a)||(Array.isArray(a)?a=Buffer.from(a):a=Buffer.from(a.toString()));const b=a.toString("hex");return this._hexify(b)},BINARY.prototype._hexify=function(a){return`X'${a}'`},BINARY.prototype._bindParam=function(a,b){return Buffer.isBuffer(a)||(Array.isArray(a)?a=Buffer.from(a):a=Buffer.from(a.toString())),b.bindParam(a)};var _default=BINARY;exports.default=_default;
+ */
+class BINARY {
+    constructor(length = 255) {
+        this.length = length;
+        this.key = "BINARY";
+        this.escape = false;
+    }
+    toString(options) {
+        throw new Error('Method not implemented.');
+    }
+    toSql() {
+        return `BINARY(${this.length})`;
+    }
+    validate(value) {
+        if (!Buffer.isBuffer(value) && typeof value !== 'number') {
+            throw new sequelize_1.default.ValidationError(util_1.default.format('%j is not a valid binary buffer', value));
+        }
+        return true;
+    }
+    stringify(value) {
+        if (!Buffer.isBuffer(value)) {
+            if (Array.isArray(value)) {
+                value = Buffer.from(value);
+            }
+            else {
+                value = Buffer.from(value.toString());
+            }
+        }
+        const hex = value.toString('hex');
+        return this._hexify(hex);
+    }
+    ;
+    _hexify(hex) {
+        return `X'${hex}'`;
+    }
+}
+exports.default = BINARY;
+//# sourceMappingURL=binary.js.map
