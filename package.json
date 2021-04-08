@@ -1,6 +1,6 @@
 {
   "name": "@hypercharlie/sequelize-binary-uuid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Makes it easy to implement binary(16) uuid's into Sequelize projects.",
   "main": "dist/index.js",
   "author": "odo, HyperCharlie and other contributors",

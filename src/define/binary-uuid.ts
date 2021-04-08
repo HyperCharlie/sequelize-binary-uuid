@@ -1,8 +1,10 @@
 import { getBinaryUUID } from '../utils/binaryUUID';
 import BINARY from '../types/binary';
-import { ModelAttributeColumnOptions } from 'sequelize';
+import { ModelAttributeColumnOptions, Optional } from 'sequelize';
 
-export default function BINARYUUID(props: any = {}): ModelAttributeColumnOptions {
+interface BINARYUUIDOPTS extends Optional<ModelAttributeColumnOptions, "type"> {}
+
+export default function BINARYUUID(props: BINARYUUIDOPTS): ModelAttributeColumnOptions {
   const defaultValue =
     props.allowNull || props.defaultValue ? props.defaultValue : () => getBinaryUUID();
   return {

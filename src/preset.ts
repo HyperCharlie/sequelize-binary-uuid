@@ -6,28 +6,22 @@ import {ModelAttributes, Model, ModelAttributeColumnOptions} from "sequelize";
   A simple preset for default key with virtual field
 */
 
-const DEFAULT_FIELD_OPS = Object.freeze({
-  primaryKey: true,
-  allowNull: false
-});
-
 export interface IPresetOptions {
   primaryID?: string;
   virtualID?: string;
-  field?: ModelAttributeColumnOptions
+  field: ModelAttributeColumnOptions
 }
 
-export default function withBinaryUUID<M extends Model>(definition: ModelAttributes<M, M['_attributes']>, ops: IPresetOptions = {}) {
+export default function withBinaryUUID<M extends Model, TCreationAttributes>(definition: ModelAttributes<M, TCreationAttributes>, ops: IPresetOptions) {
   const primaryID = ops.primaryID || 'id';
   const virtualID = ops.virtualID || 'uuid';
-  const field = !definition && !ops.field ? DEFAULT_FIELD_OPS : ops.field;
   if (definition) {
-    if (definition[primaryID]) {
+    if (definition.hasOwnProperty(primaryID)) {
       throw new Error(
         `[ERROR] | sequelize-binary-uuid | Provided definition collides with binary uuid primaryID defined: ${primaryID}`
       );
     }
-    if (definition[virtualID]) {
+    if (definition.hasOwnProperty(virtualID)) {
       throw new Error(
         `[ERROR] | sequelize-binary-uuid | Provided definition collides with binary uuid virtualID defined: ${virtualID}`
       );
@@ -35,7 +29,7 @@ export default function withBinaryUUID<M extends Model>(definition: ModelAttribu
   }
   return Object.assign(
     {
-      [primaryID]: BINARYUUID(field),
+      [primaryID]: BINARYUUID(ops.field),
       [virtualID]: VIRTUALBINARYUUID(primaryID, virtualID)
     },
     definition
